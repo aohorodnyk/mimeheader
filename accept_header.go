@@ -11,6 +11,10 @@ type AcceptHeader struct {
 	mheaders []MimeHeader
 }
 
+func NewAcceptHeader(mheaders []MimeHeader) AcceptHeader {
+	return AcceptHeader{mheaders: mheaders}
+}
+
 // Len function for sort.Interface interface.
 func (ah AcceptHeader) Len() int {
 	return len(ah.mheaders)
