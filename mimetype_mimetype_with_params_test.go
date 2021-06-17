@@ -14,7 +14,7 @@ func TestMimeType_MimeTypeWithParams(t *testing.T) {
 		t.Run(prov.name, func(t *testing.T) {
 			t.Parallel()
 
-			act := prov.b.MimeTypeWithParams()
+			act := prov.b.StringWithParams()
 			if prov.exp != act {
 				t.Fatalf("Mime type is not equal to expected.\nExpected: %s\nActual: %s\n", prov.exp, act)
 			}

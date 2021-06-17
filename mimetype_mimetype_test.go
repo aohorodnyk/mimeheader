@@ -12,7 +12,7 @@ func TestMimeType_MimeType(t *testing.T) {
 	for _, prov := range providerMimeTypeMimeType() {
 		prov := prov
 
-		act := prov.b.MimeType()
+		act := prov.b.String()
 		if prov.exp != act {
 			t.Fatalf("Mime type is not equal to expected.\nExpected: %s\nActual: %s\n", prov.exp, act)
 		}

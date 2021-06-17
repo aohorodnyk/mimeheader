@@ -18,8 +18,8 @@ type MimeType struct {
 	Params  map[string]string
 }
 
-// MimeType builds mime type from type and subtype.
-func (mt MimeType) MimeType() string {
+// String builds mime type from type and subtype.
+func (mt MimeType) String() string {
 	t := mt.Type
 	if t == "" {
 		t = MimeAny
@@ -33,9 +33,9 @@ func (mt MimeType) MimeType() string {
 	return t + MimeSeparator + st
 }
 
-// MimeTypeWithParams builds mime type from type and subtype with params.
-func (mt MimeType) MimeTypeWithParams() string {
-	return mime.FormatMediaType(mt.MimeType(), mt.Params)
+// StringWithParams builds mime type from type and subtype with params.
+func (mt MimeType) StringWithParams() string {
+	return mime.FormatMediaType(mt.String(), mt.Params)
 }
 
 // Match matches current structure with possible wildcards.
