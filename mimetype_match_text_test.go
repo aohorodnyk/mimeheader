@@ -9,7 +9,7 @@ import (
 func TestMimeType_MatchText(t *testing.T) {
 	t.Parallel()
 
-	for _, prov := range providerBaseMatchText() {
+	for _, prov := range providerMimeTypeMatchText() {
 		prov := prov
 		t.Run(prov.name, func(t *testing.T) {
 			t.Parallel()
@@ -23,15 +23,15 @@ func TestMimeType_MatchText(t *testing.T) {
 	}
 }
 
-type baseMatchText struct {
+type mimeTypeMatchText struct {
 	name string
 	b    mimeheader.MimeType
 	t    string
 	exp  bool
 }
 
-func providerBaseMatchText() []baseMatchText {
-	return []baseMatchText{
+func providerMimeTypeMatchText() []mimeTypeMatchText {
+	return []mimeTypeMatchText{
 		{
 			name: "Match application/*, positive",
 			b: mimeheader.MimeType{
@@ -39,7 +39,7 @@ func providerBaseMatchText() []baseMatchText {
 				Subtype: "*",
 				Params:  nil,
 			},
-			t: "application/json;t=1;q=0.9",
+			t:   "application/json;t=1;q=0.9",
 			exp: true,
 		},
 		{
@@ -49,7 +49,7 @@ func providerBaseMatchText() []baseMatchText {
 				Subtype: "json",
 				Params:  nil,
 			},
-			t: "application/*;t=1;q=0.9",
+			t:   "application/*;t=1;q=0.9",
 			exp: true,
 		},
 		{
@@ -59,7 +59,7 @@ func providerBaseMatchText() []baseMatchText {
 				Subtype: "json",
 				Params:  nil,
 			},
-			t: "application/*;t=1;q=0.9",
+			t:   "application/*;t=1;q=0.9",
 			exp: false,
 		},
 	}

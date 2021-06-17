@@ -6,10 +6,10 @@ import (
 	"github.com/aohorodnyk/mimeheader"
 )
 
-func TestBase_MimeType(t *testing.T) {
+func TestMimeType_MimeType(t *testing.T) {
 	t.Parallel()
 
-	for _, prov := range providerBaseMimeType() {
+	for _, prov := range providerMimeTypeMimeType() {
 		prov := prov
 
 		act := prov.b.MimeType()
@@ -19,14 +19,14 @@ func TestBase_MimeType(t *testing.T) {
 	}
 }
 
-type baseMimeType struct {
+type mimeTypeMimeType struct {
 	name string
 	b    mimeheader.MimeType
 	exp  string
 }
 
-func providerBaseMimeType() []baseMimeType {
-	return []baseMimeType{
+func providerMimeTypeMimeType() []mimeTypeMimeType {
+	return []mimeTypeMimeType{
 		{
 			name: "Empty",
 			b: mimeheader.MimeType{

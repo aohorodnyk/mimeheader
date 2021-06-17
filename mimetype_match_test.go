@@ -6,10 +6,10 @@ import (
 	"github.com/aohorodnyk/mimeheader"
 )
 
-func TestBase_Match(t *testing.T) {
+func TestMimetype_Match(t *testing.T) {
 	t.Parallel()
 
-	for _, prov := range providerBaseMatch() {
+	for _, prov := range providerMimeTypeMatch() {
 		prov := prov
 		t.Run(prov.name, func(t *testing.T) {
 			t.Parallel()
@@ -23,15 +23,15 @@ func TestBase_Match(t *testing.T) {
 	}
 }
 
-type baseMatch struct {
+type mimeTypeMatch struct {
 	name string
 	b    mimeheader.MimeType
 	t    mimeheader.MimeType
 	exp  bool
 }
 
-func providerBaseMatch() []baseMatch {
-	return []baseMatch{
+func providerMimeTypeMatch() []mimeTypeMatch {
+	return []mimeTypeMatch{
 		{
 			name: "Match text/*, positive",
 			b: mimeheader.MimeType{

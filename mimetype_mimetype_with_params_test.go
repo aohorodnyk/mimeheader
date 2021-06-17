@@ -6,7 +6,7 @@ import (
 	"github.com/aohorodnyk/mimeheader"
 )
 
-func TestBase_MimeTypeWithParams(t *testing.T) {
+func TestMimeType_MimeTypeWithParams(t *testing.T) {
 	t.Parallel()
 
 	for _, prov := range providerMimeTypeWithParams() {
@@ -22,8 +22,8 @@ func TestBase_MimeTypeWithParams(t *testing.T) {
 	}
 }
 
-func providerMimeTypeWithParams() []baseMimeType {
-	return []baseMimeType{
+func providerMimeTypeWithParams() []mimeTypeMimeType {
+	return []mimeTypeMimeType{
 		{
 			name: "Empty",
 			b: mimeheader.MimeType{
