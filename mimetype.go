@@ -52,7 +52,7 @@ func (mt MimeType) Match(target MimeType) bool {
 	return true
 }
 
-// Match matches current structure with possible wildcards. Target MUST be specific type, like "application/json", "text/plain"
+// MatchText matches current structure with possible wildcards. Target MUST be specific type, like "application/json", "text/plain"
 // MimeType structure (current) can be wildcard or specific type, like "text/*", "*/*", "text/plain".
 func (mt MimeType) MatchText(target string) bool {
 	tmtype, err := ParseMediaType(target)

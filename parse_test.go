@@ -105,7 +105,8 @@ func providerParseMediaType() []parseMediaType {
 				Subtype: "plain",
 				Params:  map[string]string{"q": "0.9", "param": "123", "k": "m"},
 			},
-		},{
+		},
+		{
 			name:   "Empty error",
 			mtype:  "",
 			expErr: fmt.Errorf("%s: %w", mimeheader.ParseMediaTypeErrMsg, errors.New("mime: no media type")),
