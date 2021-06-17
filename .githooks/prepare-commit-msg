@@ -1,0 +1,22 @@
+#!/bin/bash
+#
+# This hook adds issue/ticket number from branch name to every commit message
+#
+
+BRANCH_NAME=$(git symbolic-ref --short HEAD)
+MSG=$(head -n 1 "${1}")
+
+[[ -z "${BRANCH_NAME}" ]] && exit 0
+
+TICKET=$(echo "${BRANCH_NAME}" | grep -m 1 -oE "^v?[0-9\.]+|^\w+-[0-9]+" | head -n1)
+if [[ "${TICKET}" == "" ]]; then
+  PREPEND="[${BRANCH_NAME}] "
+elif [[ "${TICKET}" =~ ^[0-9]+$ ]]; then
+  PREPEND="#${TICKET} "
+else
+  PREPEND="[${TICKET}] "
+fi
+
+[[ "${MSG:0:${#PREPEND}}" == "${PREPEND}" ]] && exit 0
+
+sed -i.bak -e "1s|^|${PREPEND}|" "${1}"
