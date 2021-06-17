@@ -1,5 +1,5 @@
 # Mime header
-
+[![Go (tests and linters)](https://github.com/aohorodnyk/mimeheader/actions/workflows/go.yml/badge.svg)](https://github.com/aohorodnyk/mimeheader/actions/workflows/go.yml)
 ## Motivation
 This library created to help people to parse media type data, like headers, and store and match it.
 The main features of the library are to:
