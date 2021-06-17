@@ -93,5 +93,35 @@ func providerParseAcceptHeader() []parseAcceptHeader {
 				},
 			}),
 		},
+		{
+			name:   "Lost wildcard",
+			header: "*/* q=0.9; s=1, image/*; q=0.9; s=4, application/json; q=0.9; b=3;, text/plain",
+			exp: mimeheader.NewAcceptHeader([]mimeheader.MimeHeader{
+				{
+					MimeType: mimeheader.MimeType{
+						Type:    "text",
+						Subtype: "plain",
+						Params:  map[string]string{},
+					},
+					Quality: 1.0,
+				},
+				{
+					MimeType: mimeheader.MimeType{
+						Type:    "application",
+						Subtype: "json",
+						Params:  map[string]string{"q": "0.9", "b": "3"},
+					},
+					Quality: 0.9,
+				},
+				{
+					MimeType: mimeheader.MimeType{
+						Type:    "image",
+						Subtype: "*",
+						Params:  map[string]string{"q": "0.9", "s": "4"},
+					},
+					Quality: 0.9,
+				},
+			}),
+		},
 	}
 }
