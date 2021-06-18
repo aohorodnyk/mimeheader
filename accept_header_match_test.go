@@ -46,7 +46,7 @@ func providerAcceptHeaderMatch() []acceptHeaderMatch {
 		},
 		{
 			name:   "Header with typo in application",
-			header: "text/plain, text/*, image/*, aplication/json",
+			header: "text/plain, text/*, image/*, aplication/json", //nolint:misspell // Not a typo, this error was done for test purpose.
 			ctype:  "application/json",
 			exp:    false,
 		},

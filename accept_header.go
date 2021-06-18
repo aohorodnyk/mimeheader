@@ -80,9 +80,10 @@ func (ah *AcceptHeader) Add(mh MimeHeader) {
 }
 
 // Set all valid headers to AcceprHeader (override old ones).
-// Sorting will be applied
+// Sorting will be applied.
 func (ah *AcceptHeader) Set(mhs []MimeHeader) {
 	mheaders := make([]MimeHeader, 0, len(mhs))
+
 	for _, mh := range mhs {
 		if mh.Valid() {
 			mheaders = append(mheaders, mh)
