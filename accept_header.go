@@ -104,17 +104,24 @@ func (ah AcceptHeader) Negotiate(ctypes []string, dtype string) (header, mimType
 		return "", dtype, false
 	}
 
+	var parsedCType MimeType
+	mhid := -1
 	for _, ctype := range ctypes {
-		for _, header := range ah.mheaders {
+		for hid, header := range ah.mheaders {
 			mtype, err := ParseMediaType(ctype)
 			if err != nil {
 				continue
 			}
 
-			if header.Match(mtype) {
-				return header.String(), mtype.String(), true
+			if header.Match(mtype) && (mhid > hid || mhid < 0) {
+				parsedCType = mtype
+				mhid = hid
 			}
 		}
+	}
+
+	if mhid >= 0 {
+		return ah.mheaders[mhid].String(), parsedCType.String(), true
 	}
 
 	return "", dtype, false
