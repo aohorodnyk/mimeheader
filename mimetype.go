@@ -18,6 +18,20 @@ type MimeType struct {
 	Params  map[string]string
 }
 
+func (mt MimeType) Valid() bool {
+	// /plain and text/ are not valid types.
+	if mt.Type == "" || mt.Subtype == "" {
+		return false
+	}
+
+	// */plain is not valid type.
+	if mt.Type == MimeAny && mt.Subtype != MimeAny {
+		return false
+	}
+
+	return true
+}
+
 // String builds mime type from type and subtype.
 func (mt MimeType) String() string {
 	t := mt.Type

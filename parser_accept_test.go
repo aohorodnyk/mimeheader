@@ -34,17 +34,17 @@ func providerParseAcceptHeader() []parseAcceptHeader {
 		{
 			name:   "Empty",
 			header: "",
-			exp:    mimeheader.NewAcceptHeader([]mimeheader.MimeHeader{}),
+			exp:    mimeheader.NewAcceptHeaderPlain([]mimeheader.MimeHeader{}),
 		},
 		{
 			name:   "Empty object",
 			header: "{}",
-			exp:    mimeheader.NewAcceptHeader([]mimeheader.MimeHeader{}),
+			exp:    mimeheader.NewAcceptHeaderPlain([]mimeheader.MimeHeader{}),
 		},
 		{
 			name:   "Full wildcard",
 			header: "*/*",
-			exp: mimeheader.NewAcceptHeader([]mimeheader.MimeHeader{
+			exp: mimeheader.NewAcceptHeaderPlain([]mimeheader.MimeHeader{
 				{
 					MimeType: mimeheader.MimeType{
 						Type:    "*",
@@ -58,7 +58,7 @@ func providerParseAcceptHeader() []parseAcceptHeader {
 		{
 			name:   "Header with sorting",
 			header: "*/*; q=0.9; s=1, image/*; q=0.9; s=4, application/json; q=0.9; b=3;, text/plain",
-			exp: mimeheader.NewAcceptHeader([]mimeheader.MimeHeader{
+			exp: mimeheader.NewAcceptHeaderPlain([]mimeheader.MimeHeader{
 				{
 					MimeType: mimeheader.MimeType{
 						Type:    "text",
@@ -96,7 +96,7 @@ func providerParseAcceptHeader() []parseAcceptHeader {
 		{
 			name:   "Lost wildcard",
 			header: "*/* q=0.9; s=1, image/*; q=0.9; s=4, application/json; q=0.9; b=3;, text/plain",
-			exp: mimeheader.NewAcceptHeader([]mimeheader.MimeHeader{
+			exp: mimeheader.NewAcceptHeaderPlain([]mimeheader.MimeHeader{
 				{
 					MimeType: mimeheader.MimeType{
 						Type:    "text",

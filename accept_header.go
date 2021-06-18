@@ -11,8 +11,15 @@ type AcceptHeader struct {
 	mheaders []MimeHeader
 }
 
-func NewAcceptHeader(mheaders []MimeHeader) AcceptHeader {
+func NewAcceptHeaderPlain(mheaders []MimeHeader) AcceptHeader {
 	return AcceptHeader{mheaders: mheaders}
+}
+
+func NewAcceptHeader(mheaders []MimeHeader) AcceptHeader {
+	ah := AcceptHeader{mheaders: mheaders}
+	ah.sort()
+
+	return ah
 }
 
 // Len function for sort.Interface interface.
@@ -58,20 +65,39 @@ func (ah *AcceptHeader) Swap(i, j int) {
 	ah.mheaders[i], ah.mheaders[j] = ah.mheaders[j], ah.mheaders[i]
 }
 
+// Add mime header to accept header.
+// MimeHeader will be validated and added ONLY if valid.
+// AcceptHeader will be sorted.
+// For performance reasons better to use Set, instead of Add.
 func (ah *AcceptHeader) Add(mh MimeHeader) {
+	if !mh.Valid() {
+		return
+	}
+
 	ah.mheaders = append(ah.mheaders, mh)
 
 	ah.sort()
 }
 
+// Set all valid headers to AcceprHeader (override old ones).
+// Sorting will be applied
 func (ah *AcceptHeader) Set(mhs []MimeHeader) {
-	ah.mheaders = mhs
+	mheaders := make([]MimeHeader, 0, len(mhs))
+	for _, mh := range mhs {
+		if mh.Valid() {
+			mheaders = append(mheaders, mh)
+		}
+	}
+
+	ah.mheaders = mheaders
 
 	ah.sort()
 }
 
 // Negotiate return appropriate type fot current accept list from supported (common) mime types.
-// Second parameter shows matched common type or default type applied.
+// First parameter returns matched value from accept header.
+// Second parameter returns matched common type.
+// Third parameter returns matched common type or default type applied.
 func (ah AcceptHeader) Negotiate(ctypes []string, dtype string) (header, mimType string, matched bool) {
 	if len(ctypes) == 0 || len(ah.mheaders) == 0 {
 		return "", dtype, false
@@ -93,6 +119,8 @@ func (ah AcceptHeader) Negotiate(ctypes []string, dtype string) (header, mimType
 	return "", dtype, false
 }
 
+// Match is the same function as AcceptHeader.Negotiate.
+// It implements simplified interface to match only one type and return only matched or not information.
 func (ah AcceptHeader) Match(mtype string) bool {
 	_, _, matched := ah.Negotiate([]string{mtype}, "")
 
