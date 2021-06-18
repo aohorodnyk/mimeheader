@@ -44,7 +44,7 @@ func providerAcceptHeaderNegotiate() []acceptHeaderNegotiate {
 	return []acceptHeaderNegotiate{
 		{
 			name:       "Empty ctypes",
-			ah:         mimeheader.NewAcceptHeader([]mimeheader.MimeHeader{}),
+			ah:         mimeheader.ParseAcceptHeader(""),
 			ctypes:     []string{},
 			dtype:      "text/plain",
 			expHeader:  "",
@@ -52,15 +52,8 @@ func providerAcceptHeaderNegotiate() []acceptHeaderNegotiate {
 			expMatched: false,
 		},
 		{
-			name: "Wrong ctypes",
-			ah: mimeheader.NewAcceptHeader([]mimeheader.MimeHeader{
-				{
-					MimeType: mimeheader.MimeType{
-						Type:    "*",
-						Subtype: "*",
-					},
-				},
-			}),
+			name:       "Wrong ctypes",
+			ah:         mimeheader.ParseAcceptHeader("*/*"),
 			ctypes:     []string{"application/json;param="},
 			dtype:      "text/plain",
 			expHeader:  "",
@@ -68,15 +61,8 @@ func providerAcceptHeaderNegotiate() []acceptHeaderNegotiate {
 			expMatched: false,
 		},
 		{
-			name: "Wildcard ctypes",
-			ah: mimeheader.NewAcceptHeader([]mimeheader.MimeHeader{
-				{
-					MimeType: mimeheader.MimeType{
-						Type:    "*",
-						Subtype: "*",
-					},
-				},
-			}),
+			name:       "Wildcard ctypes",
+			ah:         mimeheader.ParseAcceptHeader("*/*"),
 			ctypes:     []string{"application/json;param=1"},
 			dtype:      "text/plain",
 			expHeader:  "*/*",
@@ -84,33 +70,8 @@ func providerAcceptHeaderNegotiate() []acceptHeaderNegotiate {
 			expMatched: true,
 		},
 		{
-			name: "Sorted list of types with the same structure",
-			ah: mimeheader.NewAcceptHeader([]mimeheader.MimeHeader{
-				{
-					MimeType: mimeheader.MimeType{
-						Type:    "application",
-						Subtype: "json",
-						Params:  map[string]string{"q": "1.0"},
-					},
-					Quality: 1.0,
-				},
-				{
-					MimeType: mimeheader.MimeType{
-						Type:    "*",
-						Subtype: "*",
-						Params:  map[string]string{"q": "1.0", "param": "wild"},
-					},
-					Quality: 1.0,
-				},
-				{
-					MimeType: mimeheader.MimeType{
-						Type:    "image",
-						Subtype: "png",
-						Params:  map[string]string{"q": "1.0", "param": "test"},
-					},
-					Quality: 1.0,
-				},
-			}),
+			name:       "Sorted list of types with the same structure",
+			ah:         mimeheader.ParseAcceptHeader("application/json;q=1.0,*/*;q=1.0; param=wild,image/png;q=1.0;param=test"),
 			ctypes:     []string{"application/json;param=1", "image/png"},
 			dtype:      "text/plain",
 			expHeader:  "image/png",
@@ -118,33 +79,8 @@ func providerAcceptHeaderNegotiate() []acceptHeaderNegotiate {
 			expMatched: true,
 		},
 		{
-			name: "Sorted list of types with the same structure",
-			ah: mimeheader.NewAcceptHeader([]mimeheader.MimeHeader{
-				{
-					MimeType: mimeheader.MimeType{
-						Type:    "application",
-						Subtype: "json",
-						Params:  map[string]string{"q": "1.0"},
-					},
-					Quality: 1.0,
-				},
-				{
-					MimeType: mimeheader.MimeType{
-						Type:    "*",
-						Subtype: "*",
-						Params:  map[string]string{"q": "1.0", "param": "wild"},
-					},
-					Quality: 1.0,
-				},
-				{
-					MimeType: mimeheader.MimeType{
-						Type:    "image",
-						Subtype: "png",
-						Params:  map[string]string{"q": "1.0", "param": "test"},
-					},
-					Quality: 1.0,
-				},
-			}),
+			name:       "Sorted list of types with the same structure",
+			ah:         mimeheader.ParseAcceptHeader("application/json;q=1.0,*/*;q=1.0; param=wild,image/png;q=1.0;param=test"),
 			ctypes:     []string{"application/xml;param=1", "text/plain"},
 			dtype:      "text/javascript",
 			expHeader:  "*/*",
@@ -152,25 +88,8 @@ func providerAcceptHeaderNegotiate() []acceptHeaderNegotiate {
 			expMatched: true,
 		},
 		{
-			name: "Sorted list of types with the same structure",
-			ah: mimeheader.NewAcceptHeader([]mimeheader.MimeHeader{
-				{
-					MimeType: mimeheader.MimeType{
-						Type:    "application",
-						Subtype: "*",
-						Params:  map[string]string{"q": "1.0"},
-					},
-					Quality: 1.0,
-				},
-				{
-					MimeType: mimeheader.MimeType{
-						Type:    "image",
-						Subtype: "*",
-						Params:  map[string]string{"q": "1.0", "param": "test"},
-					},
-					Quality: 1.0,
-				},
-			}),
+			name:       "Sorted list of types with the same structure",
+			ah:         mimeheader.ParseAcceptHeader("application/json;q=1.0,image/*;q=1.0;param=test"),
 			ctypes:     []string{"test/xml;param=1", "text/plain"},
 			dtype:      "text/javascript",
 			expHeader:  "",

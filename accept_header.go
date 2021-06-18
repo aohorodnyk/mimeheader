@@ -105,7 +105,9 @@ func (ah AcceptHeader) Negotiate(ctypes []string, dtype string) (header, mimType
 	}
 
 	var parsedCType MimeType
+
 	mhid := -1
+
 	for _, ctype := range ctypes {
 		for hid, header := range ah.mheaders {
 			mtype, err := ParseMediaType(ctype)
