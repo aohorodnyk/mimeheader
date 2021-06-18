@@ -1,0 +1,124 @@
+run:
+  modules-download-mode: readonly # Do not update dependencies.
+
+linters-settings:
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - experimental
+      - opinionated
+      - performance
+      - style
+    disabled-checks:
+      - dupImport # https://github.com/go-critic/go-critic/issues/845
+  gomnd:
+    settings:
+      mnd:
+        # don't include the "operation" and "assign"
+        checks:
+          - argument
+          - case
+          - condition
+          - return
+  lll:
+    line-length: 160
+  maligned:
+    suggest-new: true
+  misspell:
+    locale: US
+  staticcheck:
+    go: "1.16"
+  gosimple:
+    go: "1.16"
+  stylecheck:
+    go: "1.16"
+  unused:
+    go: "1.16"
+
+linters:
+  # please, do not use `enable-all`: it's deprecated and will be removed soon.
+  # inverted configuration with `enable-all` and `disable` is not scalable during updates of golangci-lint
+  disable-all: true
+  enable:
+    # Default linters
+    - deadcode
+    - errcheck
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - structcheck
+    - typecheck
+    - unused
+    - varcheck
+    # Additional linters
+    - asciicheck
+    - bodyclose
+    - cyclop
+    - depguard
+    - dogsled
+    - dupl
+    - durationcheck
+    - errorlint
+    - exhaustive
+    # - exhaustivestruct
+    - exportloopref
+    - forbidigo
+    - forcetypeassert
+    - funlen
+    - gci
+    - gochecknoglobals
+    - gochecknoinits
+    - gocognit
+    - goconst
+    - gocritic
+    - gocyclo
+    - godot
+    - godox
+    - goerr113
+    - gofmt
+    - gofumpt
+    - goheader # Configure it
+    - goimports
+    - gomnd
+    - gomoddirectives
+    - gomodguard
+    - goprintffuncname
+    - gosec
+    - importas
+    - lll
+    - makezero
+    - misspell
+    - nakedret
+    - nestif
+    - nlreturn
+    - noctx
+    - nolintlint
+    - paralleltest
+    - prealloc
+    - predeclared
+    - promlinter
+    - revive
+    - rowserrcheck
+    - sqlclosecheck
+    - stylecheck
+    - tagliatelle
+    - testpackage
+    - thelper
+    - tparallel
+    - unconvert
+    - unparam
+    - wastedassign
+    - whitespace
+    - wrapcheck
+    - wsl
+
+issues:
+    exclude-rules:
+      - path: _test\.go
+        linters:
+        - gocyclo
+        - funlen
+        - goerr113
+        - dupl
+        - exhaustivestruct

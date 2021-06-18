@@ -1,0 +1,17 @@
+version: '3'
+
+tasks:
+  test:
+    cmds:
+      - go test -v -race ./...
+    env:
+      CGO_ENABLED: 1
+  lint:
+    cmds:
+      - golangci-lint run -v ./...
+    env:
+      CGO_ENABLED: 0
+  verify:
+    deps:
+      - test
+      - lint
