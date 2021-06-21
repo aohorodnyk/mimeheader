@@ -2,8 +2,6 @@ package mimeheader_test
 
 import (
 	"errors"
-	"fmt"
-	"mime"
 	"reflect"
 	"testing"
 
@@ -19,12 +17,8 @@ func TestParseMediaType(t *testing.T) {
 			t.Parallel()
 
 			b, err := mimeheader.ParseMediaType(prov.mtype)
-			if (prov.expErr == nil) != (err == nil) {
-				t.Errorf("Unexpected error.\nExpected: %+v\nActual: %+v\n", prov.expErr, err)
-			}
-
-			if err != nil && prov.expErr != nil && prov.expErr.Error() != err.Error() {
-				t.Fatalf("Enuxpected error message.\nExpected: %s\nActual: %s\n", prov.expErr.Error(), err.Error())
+			if !errors.Is(err, prov.expErr) && !errors.As(err, &prov.expErr) {
+				t.Errorf("Unexpected error.\nExpected: %#v\nActual: %#v\n", prov.expErr, err)
 			}
 
 			if !reflect.DeepEqual(prov.exp, b) {
@@ -109,31 +103,31 @@ func providerParseMediaType() []parseMediaType {
 		{
 			name:   "Empty error",
 			mtype:  "",
-			expErr: fmt.Errorf("%s: %w", mimeheader.ParseMediaTypeErrMsg, errors.New("mime: no media type")),
+			expErr: mimeheader.MimeParseErr{},
 			exp:    mimeheader.MimeType{},
 		},
 		{
 			name:   "Wrong wildcard",
 			mtype:  "*/plain",
-			expErr: mimeheader.ErrMimeTypeWildcard,
+			expErr: mimeheader.MimeTypeWildcardErr{},
 			exp:    mimeheader.MimeType{},
 		},
 		{
 			name:   "Wrong delimiters",
 			mtype:  "text/plain;;",
-			expErr: fmt.Errorf("%s: %w", mimeheader.ParseMediaTypeErrMsg, errors.New("mime: invalid media parameter")),
+			expErr: mimeheader.MimeParseErr{},
 			exp:    mimeheader.MimeType{},
 		},
 		{
 			name:   "Invalid parts number",
 			mtype:  "*-plain",
-			expErr: mimeheader.ErrMimeTypeParts,
+			expErr: mimeheader.MimeTypePartsErr{},
 			exp:    mimeheader.MimeType{},
 		},
 		{
 			name:   "Wrong parameter",
 			mtype:  "text/plain; p=",
-			expErr: fmt.Errorf("%s: %w", mimeheader.ParseMediaTypeErrMsg, mime.ErrInvalidMediaParameter),
+			expErr: mimeheader.MimeTypeWildcardErr{},
 			exp:    mimeheader.MimeType{},
 		},
 	}
