@@ -1,10 +1,28 @@
 package mimeheader_test
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/aohorodnyk/mimeheader"
 )
+
+func ExampleMimeType_Match() {
+	// Parse media type
+	mediaType := "application/json; q=1; param=test;"
+
+	mimeType, err := mimeheader.ParseMediaType(mediaType)
+	if err != nil {
+		panic(err)
+	}
+
+	// Parse input and match it.
+	fmt.Println(mimeType.Match(mimeheader.MimeType{Type: "application", Subtype: "json"}))
+	fmt.Println(mimeType.Match(mimeheader.MimeType{Type: "application", Subtype: "xml"}))
+	// Output:
+	// true
+	// false
+}
 
 func TestMimetype_Match(t *testing.T) {
 	t.Parallel()
