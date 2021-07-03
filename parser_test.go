@@ -2,11 +2,40 @@ package mimeheader_test
 
 import (
 	"errors"
+	"fmt"
 	"reflect"
 	"testing"
 
 	"github.com/aohorodnyk/mimeheader"
 )
+
+func ExampleParseMediaType() {
+	mediaType := "application/*; q=1; param=test;"
+	mimeType, err := mimeheader.ParseMediaType(mediaType)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(mimeType.String())
+	fmt.Println(mimeType.StringWithParams())
+	fmt.Println(mimeType.MatchText("application/json"))
+	fmt.Println(mimeType.MatchText("application/xml"))
+	fmt.Println(mimeType.MatchText("text/plain"))
+
+	tmtype, err := mimeheader.ParseMediaType("application/json")
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(mimeType.Match(tmtype))
+	// Output:
+	// application/*
+	// application/*; param=test; q=1
+	// true
+	// true
+	// false
+	// true
+}
 
 func TestParseMediaType(t *testing.T) {
 	t.Parallel()
