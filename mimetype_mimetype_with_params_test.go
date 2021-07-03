@@ -31,7 +31,7 @@ func providerMimeTypeWithParams() []mimeTypeMimeType {
 				Subtype: "",
 				Params:  map[string]string{"param": "a"},
 			},
-			exp: "*/*; param=a",
+			exp: "",
 		},
 		{
 			name: "Empty type",

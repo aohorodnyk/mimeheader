@@ -31,8 +31,8 @@ func TestAcceptHeader_Negotiate(t *testing.T) {
 			t.Parallel()
 
 			actHeader, actMType, actMatched := prov.ah.Negotiate(prov.ctypes, prov.dtype)
-			if actHeader != prov.expHeader {
-				t.Errorf("Wrong header matched.\nExpected: %s\nActual: %s", prov.expHeader, actHeader)
+			if actHeader.String() != prov.expHeader.String() {
+				t.Errorf("Wrong header matched.\nExpected: %v\nActual: %v", prov.expHeader, actHeader)
 			}
 
 			if actMType != prov.expMType {
@@ -51,7 +51,7 @@ type acceptHeaderNegotiate struct {
 	ah         mimeheader.AcceptHeader
 	ctypes     []string
 	dtype      string
-	expHeader  string
+	expHeader  mimeheader.MimeHeader
 	expMType   string
 	expMatched bool
 }
@@ -63,7 +63,7 @@ func providerAcceptHeaderNegotiate() []acceptHeaderNegotiate {
 			ah:         mimeheader.ParseAcceptHeader(""),
 			ctypes:     []string{},
 			dtype:      "text/plain",
-			expHeader:  "",
+			expHeader:  mimeheader.MimeHeader{},
 			expMType:   "text/plain",
 			expMatched: false,
 		},
@@ -72,7 +72,7 @@ func providerAcceptHeaderNegotiate() []acceptHeaderNegotiate {
 			ah:         mimeheader.ParseAcceptHeader("*/*"),
 			ctypes:     []string{"application/json;param="},
 			dtype:      "text/plain",
-			expHeader:  "",
+			expHeader:  mimeheader.MimeHeader{},
 			expMType:   "text/plain",
 			expMatched: false,
 		},
@@ -81,25 +81,25 @@ func providerAcceptHeaderNegotiate() []acceptHeaderNegotiate {
 			ah:         mimeheader.ParseAcceptHeader("*/*"),
 			ctypes:     []string{"application/json;param=1"},
 			dtype:      "text/plain",
-			expHeader:  "*/*",
+			expHeader:  mimeheader.MimeHeader{MimeType: mimeheader.MimeType{Type: "*", Subtype: "*"}},
 			expMType:   "application/json",
 			expMatched: true,
 		},
 		{
-			name:       "Sorted list of types with the same structure",
+			name:       "Sorted list of types with the same structure image/png",
 			ah:         mimeheader.ParseAcceptHeader("application/json;q=1.0,*/*;q=1.0; param=wild,image/png;q=1.0;param=test"),
 			ctypes:     []string{"application/json;param=1", "image/png"},
 			dtype:      "text/plain",
-			expHeader:  "image/png",
+			expHeader:  mimeheader.MimeHeader{MimeType: mimeheader.MimeType{Type: "image", Subtype: "png"}},
 			expMType:   "image/png",
 			expMatched: true,
 		},
 		{
-			name:       "Sorted list of types with the same structure",
+			name:       "Sorted list of types with the same structure */*",
 			ah:         mimeheader.ParseAcceptHeader("application/json;q=1.0,*/*;q=1.0; param=wild,image/png;q=1.0;param=test"),
 			ctypes:     []string{"application/xml;param=1", "text/plain"},
 			dtype:      "text/javascript",
-			expHeader:  "*/*",
+			expHeader:  mimeheader.MimeHeader{MimeType: mimeheader.MimeType{Type: "*", Subtype: "*"}},
 			expMType:   "application/xml",
 			expMatched: true,
 		},
@@ -108,7 +108,7 @@ func providerAcceptHeaderNegotiate() []acceptHeaderNegotiate {
 			ah:         mimeheader.ParseAcceptHeader("application/json;q=1.0,image/*;q=1.0;param=test"),
 			ctypes:     []string{"test/xml;param=1", "text/plain"},
 			dtype:      "text/javascript",
-			expHeader:  "",
+			expHeader:  mimeheader.MimeHeader{},
 			expMType:   "text/javascript",
 			expMatched: false,
 		},

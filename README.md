@@ -53,7 +53,7 @@ func parse(acceptHeader string) {
 ```
 
 ### Accept header HTTP middleware
-This middleware suggested to be used by [OWASP](https://cheatsheetseries.owasp.org/cheatsheets/REST_Security_Cheat_Sheet.html#send-safe-response-content-types) in all appications.
+[OWASP](https://cheatsheetseries.owasp.org/cheatsheets/REST_Security_Cheat_Sheet.html#send-safe-response-content-types) suggests using this middleware in all applications.
 ```go
 package main
 
@@ -109,7 +109,7 @@ func handlerTestFunc(rw http.ResponseWriter, r *http.Request) {
 ```
 
 Requests example
-```http
+```http request
 GET http://localhost:8080/
 Accept: text/*; q=0.9,application/json; q=1;
 

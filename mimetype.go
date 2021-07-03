@@ -34,6 +34,10 @@ func (mt MimeType) Valid() bool {
 
 // String builds mime type from type and subtype.
 func (mt MimeType) String() string {
+	if mt.Type == "" && mt.Subtype == "" {
+		return ""
+	}
+
 	t := mt.Type
 	if t == "" {
 		t = MimeAny

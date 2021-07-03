@@ -99,9 +99,9 @@ func (ah *AcceptHeader) Set(mhs []MimeHeader) {
 // First parameter returns matched value from accept header.
 // Second parameter returns matched common type.
 // Third parameter returns matched common type or default type applied.
-func (ah AcceptHeader) Negotiate(ctypes []string, dtype string) (header, mimType string, matched bool) {
+func (ah AcceptHeader) Negotiate(ctypes []string, dtype string) (accept MimeHeader, mimeType string, matched bool) {
 	if len(ctypes) == 0 || len(ah.mheaders) == 0 {
-		return "", dtype, false
+		return MimeHeader{}, dtype, false
 	}
 
 	var parsedCType MimeType
@@ -123,10 +123,10 @@ func (ah AcceptHeader) Negotiate(ctypes []string, dtype string) (header, mimType
 	}
 
 	if mhid >= 0 {
-		return ah.mheaders[mhid].String(), parsedCType.String(), true
+		return ah.mheaders[mhid], parsedCType.String(), true
 	}
 
-	return "", dtype, false
+	return MimeHeader{}, dtype, false
 }
 
 // Match is the same function as AcceptHeader.Negotiate.
