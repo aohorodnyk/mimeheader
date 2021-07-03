@@ -9,30 +9,70 @@ import (
 	"github.com/aohorodnyk/mimeheader"
 )
 
-func ExampleParseMediaType() {
+func ExampleParseMediaType_wildcard() {
+	// Parse media type
 	mediaType := "application/*; q=1; param=test;"
 	mimeType, err := mimeheader.ParseMediaType(mediaType)
 	if err != nil {
 		panic(err)
 	}
 
+	// Print string without params.
 	fmt.Println(mimeType.String())
+	// Print string with params.
 	fmt.Println(mimeType.StringWithParams())
-	fmt.Println(mimeType.MatchText("application/json"))
-	fmt.Println(mimeType.MatchText("application/xml"))
+	// Parse input and match it.
+	fmt.Println(mimeType.MatchText("application/json; param=test"))
+	fmt.Println(mimeType.MatchText("application/xml; q=1"))
 	fmt.Println(mimeType.MatchText("text/plain"))
 
-	tmtype, err := mimeheader.ParseMediaType("application/json")
+	// Parse mime type.
+	tmtype, err := mimeheader.ParseMediaType("application/json;q=0.3")
 	if err != nil {
 		panic(err)
 	}
 
+	// Match mime types.
 	fmt.Println(mimeType.Match(tmtype))
 	// Output:
 	// application/*
 	// application/*; param=test; q=1
 	// true
 	// true
+	// false
+	// true
+}
+
+func ExampleParseMediaType_exact() {
+	// Parse media type
+	mediaType := "application/json; q=1; param=test;"
+	mimeType, err := mimeheader.ParseMediaType(mediaType)
+	if err != nil {
+		panic(err)
+	}
+
+	// Print string without params.
+	fmt.Println(mimeType.String())
+	// Print string with params.
+	fmt.Println(mimeType.StringWithParams())
+	// Parse input and match it.
+	fmt.Println(mimeType.MatchText("application/json; param=test"))
+	fmt.Println(mimeType.MatchText("application/xml; q=1"))
+	fmt.Println(mimeType.MatchText("text/plain"))
+
+	// Parse mime type.
+	tmtype, err := mimeheader.ParseMediaType("application/json;q=0.3")
+	if err != nil {
+		panic(err)
+	}
+
+	// Match mime types.
+	fmt.Println(mimeType.Match(tmtype))
+	// Output:
+	// application/json
+	// application/json; param=test; q=1
+	// true
+	// false
 	// false
 	// true
 }
