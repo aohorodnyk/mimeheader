@@ -52,6 +52,122 @@ func parse(acceptHeader string) {
 }
 ```
 
+### Accept header HTTP middleware
+This middleware suggested to be used by [OWASP](https://cheatsheetseries.owasp.org/cheatsheets/REST_Security_Cheat_Sheet.html#send-safe-response-content-types) in all appications.
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"net/http"
+
+	"github.com/aohorodnyk/mimeheader"
+)
+
+func main() {
+	r := http.NewServeMux()
+
+	r.HandleFunc("/", acceptHeaderMiddleware([]string{"application/json", "text/html"})(handlerTestFunc))
+
+	err := http.ListenAndServe(":8080", r)
+	if err != nil {
+		log.Fatalln(err)
+	}
+}
+
+func acceptHeaderMiddleware(acceptMimeTypes []string) func(http.HandlerFunc) http.HandlerFunc {
+	return func(next http.HandlerFunc) http.HandlerFunc {
+		return func(rw http.ResponseWriter, r *http.Request) {
+			header := r.Header.Get("Accept")
+			ah := mimeheader.ParseAcceptHeader(header)
+
+			// We do not need default mime type.
+			_, mtype, m := ah.Negotiate(acceptMimeTypes, "")
+			if !m {
+				// If not matched accept mim type, return 406.
+				rw.WriteHeader(http.StatusNotAcceptable)
+
+				return
+			}
+
+			// Add matched mime type to context.
+			ctx := context.WithValue(r.Context(), "resp_content_type", mtype)
+			// New requet from new context.
+			rc := r.WithContext(ctx)
+
+			// Call next middleware or handler.
+			next(rw, rc)
+		}
+	}
+}
+
+func handlerTestFunc(rw http.ResponseWriter, r *http.Request) {
+	mtype := r.Context().Value("resp_content_type").(string)
+	rw.Write([]byte(mtype))
+}
+```
+
+Requests example
+```http
+GET http://localhost:8080/
+Accept: text/*; q=0.9,application/json; q=1;
+
+# HTTP/1.1 200 OK
+# Date: Sat, 03 Jul 2021 19:14:58 GMT
+# Content-Length: 16
+# Content-Type: text/plain; charset=utf-8
+# Connection: close
+
+# application/json
+
+###
+
+GET http://localhost:8080/
+Accept: text/*; q=1,application/json; q=1;
+
+# HTTP/1.1 200 OK
+# Date: Sat, 03 Jul 2021 19:15:51 GMT
+# Content-Length: 16
+# Content-Type: text/plain; charset=utf-8
+# Connection: close
+
+# application/json
+
+###
+GET http://localhost:8080/
+Accept: text/html; q=1,application/*; q=1;
+
+# HTTP/1.1 200 OK
+# Date: Sat, 03 Jul 2021 19:16:15 GMT
+# Content-Length: 9
+# Content-Type: text/plain; charset=utf-8
+# Connection: close
+
+# text/html
+
+###
+GET http://localhost:8080/
+Accept: text/*; q=1,application/*; q=0.9;
+
+# HTTP/1.1 200 OK
+# Date: Sat, 03 Jul 2021 19:16:48 GMT
+# Content-Length: 9
+# Content-Type: text/plain; charset=utf-8
+# Connection: close
+
+# text/html
+
+###
+GET http://localhost:8080/
+Accept: text/plain; q=1,application/xml; q=1;
+
+# HTTP/1.1 406 Not Acceptable
+# Date: Sat, 03 Jul 2021 19:17:28 GMT
+# Content-Length: 0
+# Connection: close
+```
+
 ## Current benchmark results
 ```
 $ go test -bench=.
