@@ -9,7 +9,7 @@ import (
 
 func ExampleMimeType_Match() {
 	// Parse media type
-	mediaType := "application/json; q=1; param=test;"
+	mediaType := "application/xml; q=1; param=test;"
 
 	mimeType, err := mimeheader.ParseMediaType(mediaType)
 	if err != nil {
@@ -17,8 +17,8 @@ func ExampleMimeType_Match() {
 	}
 
 	// Parse input and match it.
-	fmt.Println(mimeType.Match(mimeheader.MimeType{Type: "application", Subtype: "json"}))
 	fmt.Println(mimeType.Match(mimeheader.MimeType{Type: "application", Subtype: "xml"}))
+	fmt.Println(mimeType.Match(mimeheader.MimeType{Type: "application", Subtype: "json"}))
 	// Output:
 	// true
 	// false
