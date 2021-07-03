@@ -12,6 +12,7 @@ import (
 func ExampleParseMediaType_wildcard() {
 	// Parse media type
 	mediaType := "application/*; q=1; param=test;"
+
 	mimeType, err := mimeheader.ParseMediaType(mediaType)
 	if err != nil {
 		panic(err)
@@ -46,6 +47,7 @@ func ExampleParseMediaType_wildcard() {
 func ExampleParseMediaType_exact() {
 	// Parse media type
 	mediaType := "application/json; q=1; param=test;"
+
 	mimeType, err := mimeheader.ParseMediaType(mediaType)
 	if err != nil {
 		panic(err)
