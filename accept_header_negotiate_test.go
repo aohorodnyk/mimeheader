@@ -1,10 +1,26 @@
 package mimeheader_test
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/aohorodnyk/mimeheader"
 )
+
+func ExampleAcceptHeader_Negotiate() {
+	header := "image/*; q=0.9; s=4, application/json; q=0.9; b=3;, text/plain,image/png;q=0.9, image/jpeg,image/svg;q=0.8"
+	ah := mimeheader.ParseAcceptHeader(header)
+
+	fmt.Println(ah.Negotiate([]string{"application/xml", "image/tiff"}, "text/javascript"))
+	fmt.Println(ah.Negotiate([]string{"application/xml", "image/png"}, "text/javascript"))
+	fmt.Println(ah.Negotiate([]string{"application/xml", "image/svg"}, "text/javascript"))
+	fmt.Println(ah.Negotiate([]string{"text/dart", "application/dart"}, "text/javascript"))
+	// Output:
+	// image/* image/tiff true
+	// image/png image/png true
+	// image/* image/svg true
+	//  text/javascript false
+}
 
 func TestAcceptHeader_Negotiate(t *testing.T) {
 	t.Parallel()

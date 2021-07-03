@@ -51,3 +51,19 @@ func parse(acceptHeader string) {
 	fmt.Println(ah.Negotiate([]string{"application/json;param=1", "image/png"}, "text/javascript")) // image/png, image/png, true
 }
 ```
+
+## Current benchmark results
+```
+$ go test -bench=.
+goos: darwin
+goarch: arm64
+pkg: github.com/aohorodnyk/mimeheader
+BenchmarkParseAcceptHeaderLong-8                        	  595474	      1979 ns/op	    1672 B/op	      16 allocs/op
+BenchmarkParseAcceptHeaderThreeWithWights-8             	  879034	      1364 ns/op	    1480 B/op	      14 allocs/op
+BenchmarkParseAcceptHeaderOne-8                         	 4268950	       279.7 ns/op	     232 B/op	       7 allocs/op
+BenchmarkParseAcceptHeaderAndCompareLong-8              	  295642	      4052 ns/op	    2344 B/op	      34 allocs/op
+BenchmarkParseAcceptHeaderAndCompareThreeWithWights-8   	  408138	      2943 ns/op	    1992 B/op	      28 allocs/op
+BenchmarkParseAcceptHeaderAndCompareOne-8               	 1399750	       856.0 ns/op	     411 B/op	      13 allocs/op
+PASS
+ok  	github.com/aohorodnyk/mimeheader	9.252s
+```

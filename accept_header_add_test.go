@@ -1,11 +1,23 @@
 package mimeheader_test
 
 import (
+	"fmt"
 	"reflect"
 	"testing"
 
 	"github.com/aohorodnyk/mimeheader"
 )
+
+func ExampleAcceptHeader_Add() {
+	ah := mimeheader.ParseAcceptHeader("image/png")
+	fmt.Println(ah.Match("application/json"))
+
+	ah.Add(mimeheader.MimeHeader{MimeType: mimeheader.MimeType{Type: "application", Subtype: "*"}})
+	fmt.Println(ah.Match("application/json"))
+	// Output:
+	// false
+	// true
+}
 
 func TestAcceptHeader_Add(t *testing.T) {
 	t.Parallel()
