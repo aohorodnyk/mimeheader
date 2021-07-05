@@ -1,5 +1,5 @@
 # Mime header
-[![Go (tests and linters)](https://github.com/aohorodnyk/mimeheader/actions/workflows/go.yml/badge.svg)](https://github.com/aohorodnyk/mimeheader/actions/workflows/go.yml)
+[![Go (tests and linters)](https://github.com/aohorodnyk/mimeheader/actions/workflows/go.yml/badge.svg)](https://github.com/aohorodnyk/mimeheader/actions/workflows/go.yml) ![GitHub](https://img.shields.io/github/license/aohorodnyk/mimeheader) ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/aohorodnyk/mimeheader/Go) ![GitHub issues](https://img.shields.io/github/issues/aohorodnyk/mimeheader) ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/aohorodnyk/mimeheader)
 
 ## Motivation
 This library created to help people to parse media type data, like headers, and store and match it.
