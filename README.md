@@ -1,6 +1,9 @@
 # Mime header
 [![Go (tests and linters)](https://github.com/aohorodnyk/mimeheader/actions/workflows/go.yml/badge.svg)](https://github.com/aohorodnyk/mimeheader/actions/workflows/go.yml) ![GitHub](https://img.shields.io/github/license/aohorodnyk/mimeheader) ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/aohorodnyk/mimeheader/Go) ![GitHub issues](https://img.shields.io/github/issues/aohorodnyk/mimeheader) ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/aohorodnyk/mimeheader)
 
+## RFC reference
+Implementation of mime types and [Accept header support (RFC 2616 Sec 14.1)](https://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.1).
+
 ## Motivation
 This library created to help people to parse media type data, like headers, and store and match it.
 The main features of the library are to:
