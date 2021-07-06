@@ -455,5 +455,44 @@ func provideAcceptHeaderSet() []acceptHeaderSet {
 			headers: []mimeheader.MimeHeader{},
 			exp:     mimeheader.NewAcceptHeaderPlain([]mimeheader.MimeHeader{}),
 		},
+		{
+			name: "Issue #6 sort by params",
+			headers: []mimeheader.MimeHeader{
+				{
+					MimeType: mimeheader.MimeType{
+						Type:    "application",
+						Subtype: "xml",
+						Params:  map[string]string{"q": "1.0", "test": "t"},
+					},
+					Quality: 1,
+				},
+				{
+					MimeType: mimeheader.MimeType{
+						Type:    "application",
+						Subtype: "json",
+						Params:  map[string]string{"charset": "utf-8", "test": "t"},
+					},
+					Quality: 1,
+				},
+			},
+			exp: mimeheader.NewAcceptHeaderPlain([]mimeheader.MimeHeader{
+				{
+					MimeType: mimeheader.MimeType{
+						Type:    "application",
+						Subtype: "json",
+						Params:  map[string]string{"charset": "utf-8", "test": "t"},
+					},
+					Quality: 1,
+				},
+				{
+					MimeType: mimeheader.MimeType{
+						Type:    "application",
+						Subtype: "xml",
+						Params:  map[string]string{"q": "1.0", "test": "t"},
+					},
+					Quality: 1,
+				},
+			}),
+		},
 	}
 }
