@@ -34,30 +34,56 @@ func (ah AcceptHeader) Less(i, j int) bool {
 		return ah.mheaders[i].Quality < ah.mheaders[j].Quality
 	}
 
+	less, done := ah.lessWildcard(i, j)
+	if done {
+		return less
+	}
+
+	return ah.lessParams(i, j)
+}
+
+func (ah AcceptHeader) lessParams(i, j int) bool {
+	li := len(ah.mheaders[i].Params)
+	_, ok := ah.mheaders[i].Params["q"]
+
+	if ok {
+		li--
+	}
+
+	lj := len(ah.mheaders[j].Params)
+	_, ok = ah.mheaders[j].Params["q"]
+
+	if ok {
+		lj--
+	}
+
+	return li < lj
+}
+
+func (ah AcceptHeader) lessWildcard(i, j int) (less, done bool) {
 	// '*' value has less priority than a specific type
 	// If i contains '*' and j has specific type, then i less than j
 	if ah.mheaders[i].Type == MimeAny && ah.mheaders[j].Type != MimeAny {
-		return true
+		return true, true
 	}
 
 	// If i contains a specific type and j contains '*' then i greater than j
 	if ah.mheaders[i].Type != MimeAny && ah.mheaders[j].Type == MimeAny {
-		return false
+		return false, true
 	}
 
 	// '*' value has less priority than a specific type
 	// If i contains '*' and j has specific type, then i less than j
 	if ah.mheaders[i].Subtype == MimeAny && ah.mheaders[j].Subtype != MimeAny {
-		return true
+		return true, true
 	}
 
 	// If i contains a specific type and j contains '*' then i greater than j
 	if ah.mheaders[i].Subtype != MimeAny && ah.mheaders[j].Subtype == MimeAny {
-		return false
+		return false, true
 	}
 
-	// More specific params has greater priority
-	return len(ah.mheaders[i].Params) < len(ah.mheaders[j].Params)
+	return false, false
 }
 
 // Swap function for sort.Interface interface.
