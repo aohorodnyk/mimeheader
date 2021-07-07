@@ -186,3 +186,7 @@ BenchmarkParseAcceptHeaderAndCompareOne-8               	 1399750	       856.0 n
 PASS
 ok  	github.com/aohorodnyk/mimeheader	9.252s
 ```
+
+## Contributing
+All contributions have to follow the [CONTRIBUTING.md document](https://github.com/aohorodnyk/uid/blob/main/CONTRIBUTING.md)
+If you have any questions/issues/feature requests do not hesitate to create a ticket.
