@@ -8,15 +8,15 @@ type MimeHeader struct {
 }
 
 type AcceptHeader struct {
-	mheaders []MimeHeader
+	MHeaders []MimeHeader
 }
 
 func NewAcceptHeaderPlain(mheaders []MimeHeader) AcceptHeader {
-	return AcceptHeader{mheaders: mheaders}
+	return AcceptHeader{MHeaders: mheaders}
 }
 
 func NewAcceptHeader(mheaders []MimeHeader) AcceptHeader {
-	ah := AcceptHeader{mheaders: mheaders}
+	ah := AcceptHeader{MHeaders: mheaders}
 	ah.sort()
 
 	return ah
@@ -24,14 +24,14 @@ func NewAcceptHeader(mheaders []MimeHeader) AcceptHeader {
 
 // Len function for sort.Interface interface.
 func (ah AcceptHeader) Len() int {
-	return len(ah.mheaders)
+	return len(ah.MHeaders)
 }
 
 // Less function for sort.Interface interface.
 func (ah AcceptHeader) Less(i, j int) bool {
 	// Sort accepts by quality value. If quality is not equal, then return is i less than j
-	if ah.mheaders[i].Quality != ah.mheaders[j].Quality {
-		return ah.mheaders[i].Quality < ah.mheaders[j].Quality
+	if ah.MHeaders[i].Quality != ah.MHeaders[j].Quality {
+		return ah.MHeaders[i].Quality < ah.MHeaders[j].Quality
 	}
 
 	less, done := ah.lessWildcard(i, j)
@@ -43,15 +43,15 @@ func (ah AcceptHeader) Less(i, j int) bool {
 }
 
 func (ah AcceptHeader) lessParams(i, j int) bool {
-	li := len(ah.mheaders[i].Params)
-	_, ok := ah.mheaders[i].Params["q"]
+	li := len(ah.MHeaders[i].Params)
+	_, ok := ah.MHeaders[i].Params["q"]
 
 	if ok {
 		li--
 	}
 
-	lj := len(ah.mheaders[j].Params)
-	_, ok = ah.mheaders[j].Params["q"]
+	lj := len(ah.MHeaders[j].Params)
+	_, ok = ah.MHeaders[j].Params["q"]
 
 	if ok {
 		lj--
@@ -63,23 +63,23 @@ func (ah AcceptHeader) lessParams(i, j int) bool {
 func (ah AcceptHeader) lessWildcard(i, j int) (less, done bool) {
 	// '*' value has less priority than a specific type
 	// If i contains '*' and j has specific type, then i less than j
-	if ah.mheaders[i].Type == MimeAny && ah.mheaders[j].Type != MimeAny {
+	if ah.MHeaders[i].Type == MimeAny && ah.MHeaders[j].Type != MimeAny {
 		return true, true
 	}
 
 	// If i contains a specific type and j contains '*' then i greater than j
-	if ah.mheaders[i].Type != MimeAny && ah.mheaders[j].Type == MimeAny {
+	if ah.MHeaders[i].Type != MimeAny && ah.MHeaders[j].Type == MimeAny {
 		return false, true
 	}
 
 	// '*' value has less priority than a specific type
 	// If i contains '*' and j has specific type, then i less than j
-	if ah.mheaders[i].Subtype == MimeAny && ah.mheaders[j].Subtype != MimeAny {
+	if ah.MHeaders[i].Subtype == MimeAny && ah.MHeaders[j].Subtype != MimeAny {
 		return true, true
 	}
 
 	// If i contains a specific type and j contains '*' then i greater than j
-	if ah.mheaders[i].Subtype != MimeAny && ah.mheaders[j].Subtype == MimeAny {
+	if ah.MHeaders[i].Subtype != MimeAny && ah.MHeaders[j].Subtype == MimeAny {
 		return false, true
 	}
 
@@ -88,7 +88,7 @@ func (ah AcceptHeader) lessWildcard(i, j int) (less, done bool) {
 
 // Swap function for sort.Interface interface.
 func (ah *AcceptHeader) Swap(i, j int) {
-	ah.mheaders[i], ah.mheaders[j] = ah.mheaders[j], ah.mheaders[i]
+	ah.MHeaders[i], ah.MHeaders[j] = ah.MHeaders[j], ah.MHeaders[i]
 }
 
 // Add mime header to accept header.
@@ -100,7 +100,7 @@ func (ah *AcceptHeader) Add(mh MimeHeader) {
 		return
 	}
 
-	ah.mheaders = append(ah.mheaders, mh)
+	ah.MHeaders = append(ah.MHeaders, mh)
 
 	ah.sort()
 }
@@ -116,7 +116,7 @@ func (ah *AcceptHeader) Set(mhs []MimeHeader) {
 		}
 	}
 
-	ah.mheaders = mheaders
+	ah.MHeaders = mheaders
 
 	ah.sort()
 }
@@ -126,7 +126,7 @@ func (ah *AcceptHeader) Set(mhs []MimeHeader) {
 // Second parameter returns matched common type.
 // Third parameter returns matched common type or default type applied.
 func (ah AcceptHeader) Negotiate(ctypes []string, dtype string) (accept MimeHeader, mimeType string, matched bool) {
-	if len(ctypes) == 0 || len(ah.mheaders) == 0 {
+	if len(ctypes) == 0 || len(ah.MHeaders) == 0 {
 		return MimeHeader{}, dtype, false
 	}
 
@@ -135,7 +135,7 @@ func (ah AcceptHeader) Negotiate(ctypes []string, dtype string) (accept MimeHead
 	mhid := -1
 
 	for _, ctype := range ctypes {
-		for hid, header := range ah.mheaders {
+		for hid, header := range ah.MHeaders {
 			mtype, err := ParseMediaType(ctype)
 			if err != nil {
 				continue
@@ -149,7 +149,7 @@ func (ah AcceptHeader) Negotiate(ctypes []string, dtype string) (accept MimeHead
 	}
 
 	if mhid >= 0 {
-		return ah.mheaders[mhid], parsedCType.String(), true
+		return ah.MHeaders[mhid], parsedCType.String(), true
 	}
 
 	return MimeHeader{}, dtype, false
