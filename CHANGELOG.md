@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.6] 2021-12-13
+### Changed
+- #10 Export AcceptHeader.MHeaders by @Jake-Convictional in #11.
+
 ## [0.0.5] 2021-07-06
 ### Changed
 - Ignore `q` param in Accept header sorting.
